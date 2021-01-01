@@ -1,61 +1,88 @@
-var fixedRect , movingRect;
-var o1,o2,o3,o4
+
+
+var wall,thickness;
+
+var bullet,speed, weight; 
 
 
 function setup() {
-  createCanvas(1200,800);
+  createCanvas(1600, 400);
 
- fixedRect = createSprite(200, 100, 50, 50);
- fixedRect.shapeColor = "blue"
- fixedRect.debug = true
 
- movingRect = createSprite(300,200,80,50)
- movingRect.shapeColor = "blue"
- movingRect.debug = true
+	speed=random(223,321)
+	weight=random(30,52)
+    thickness=random(22,83)
 
- o1 = createSprite(400, 300, 50, 50);
- o1.shapeColor = "blue"
- o1.debug = true
+	car=createSprite(50, 200, 50,50);   
 
- o3 = createSprite(500,400,80,50)
- o3.shapeColor = "blue"
- o3.debug = true
- 
- o2 = createSprite(600, 400, 50, 50);
- o2.shapeColor = "blue"
- o2.debug = true
+	car.velocityX = speed;
 
-o4 = createSprite(300,200,80,50)
-o4.shapeColor = "blue"
-o4.debug = true
- }
+	car.shapeColor=color(255);
+
+
+  
+  	wall = createSprite(1200 , 200 , thickness , height/2)
+  	wall.shapeColor=color(80,80,80)
+}
+
 
 function draw() {
-  background("black"); 
+  background(0);
 
-  movingRect.x=mouseX;
-  movingRect.y=mouseY;
+  if(wall.x-car.x < (car.width+wall.width)/2)
+  {
+  	car.velocityX=0;
+  	var deformation=0.5 * weight * speed* speed/22500;
+	if(deformation>180)
+	{
+		car.shapeColor=color(255,0,0);
+	}
+
+	if(deformation<180 && deformation>100)
+	{
+		car.shapeColor=color(230,230,0);
+	}
+
+	if(deformation<100)
+	{
+		car.shapeColor=color(0,255,0);
+	}
+  }  
   
- if(isTouching(movingRect,o4)){
-  movingRect.shapeColor = "red"
-  o4.shapeColor = "red"
- }
- else{
-  movingRect.shapeColor = "blue"
-  o4.shapeColor = "blue"
- }
   drawSprites();
+ 
 }
 
-function isTouching(a,b){
-  if(a.x - b.x < a.width/2 + b.width/2 && 
-    b.x - a.x < a.width/2 +b.width/2  && 
-    a.y - b.y < a.height/2 + b.height/2 && 
-    b.y - a.y <a.height/2 + b.height/2 ){
-      return true;
-   
-  }else {
-   return false;
-  }
-
+function hasCollided(lbullet,lwall){
+	bulletRightEdge = lbullet.x + lbullet.width;
+	wallLeftEdge = lwall.x;
+	if(bulletRightEdge>=wallLeftEdge){
+		return true 
+	}
+	return false
 }
+
+if(hasCollided(bullet,wall)){
+	bullet.velocityX = 0
+	var damage = 0.5* weight *speed *speed/(thickness *thickness *thickness);
+
+	
+	if(damage>10){
+    wall.shapeColor = color(255,0,0); 
+	}
+
+	if(damage>10){
+		wall.shapecolor = color(0,255,0)
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
